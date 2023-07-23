@@ -1,7 +1,5 @@
 # Image processing service
 
-**Note**: Can be done in group of 2-3!
-
 ## Background
 
 In this project, you develop an image processing service. 
