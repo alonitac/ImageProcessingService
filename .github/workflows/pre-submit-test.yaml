@@ -1,0 +1,35 @@
+name: Students Presubmit Tests
+on: [push]
+jobs:
+  TestImgFilters:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          pip install -r polybot/requirements.txt
+      - name: Test filters
+        run: |
+          X=4
+          (echo -e "\n\nTesting concat()\n" && python -m polybot.test.test_concat) || ((X--))
+          (echo -e "\n\nTesting rotate()\n" && python -m polybot.test.test_rotate) || ((X--))
+          (echo -e "\n\nTesting salt_n_pepper()\n" && python -m polybot.test.test_salt_n_pepper) || ((X--))
+          (echo -e "\n\nTesting segment()\n" && python -m polybot.test.test_segment) || ((X--))
+          
+          echo -e "\n\nYou've successfully implemented $X our of 4 filters"
+          
+          if [ "$X" -eq "0" ]
+          then
+            exit 1
+          fi
+
+  TestTelegramBot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          pip install -r polybot/requirements.txt
+      - name: Run test cases
+        run: |
+          python -m polybot.test.test_telegram_bot
