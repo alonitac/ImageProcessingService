@@ -63,7 +63,7 @@ class TestBot(unittest.TestCase):
         self.bot = bot
 
     def test_contour(self):
-        mock_msg['caption'] = 'Rotate'
+        mock_msg['caption'] = 'Contour'
 
         with patch('polybot.img_proc.Img.contour') as mock_method:
             self.bot.handle_message(mock_msg)
