@@ -284,6 +284,8 @@ A few notes:
 - Remember that by inheriting the `Bot` class, you can use all of its methods (such as `send_text`, `download_user_photo`, `send_photo`...). 
 - Possible `caption` values are: `['Blur', 'Contour', 'Rotate', 'Segment', 'Salt and pepper', 'Concat']`.
 
+**Note**: Your bot should support the `Blur` and `Contour` filters (those filters have already implemented for you). 
+
 Test your bot on real photos and make sure it's functioning properly.
 
 ## Test your bot locally

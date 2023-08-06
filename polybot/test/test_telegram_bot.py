@@ -62,32 +62,15 @@ class TestBot(unittest.TestCase):
 
         self.bot = bot
 
-    def test_rotate(self):
+    def test_contour(self):
         mock_msg['caption'] = 'Rotate'
 
-        with patch('polybot.img_proc.Img.rotate') as mock_method:
+        with patch('polybot.img_proc.Img.contour') as mock_method:
             self.bot.handle_message(mock_msg)
 
             mock_method.assert_called_once()
             self.bot.telegram_bot_client.send_photo.assert_called_once()
 
-    def test_salt_n_pepper(self):
-        mock_msg['caption'] = 'Salt and pepper'
-
-        with patch('polybot.img_proc.Img.salt_n_pepper') as mock_method:
-            self.bot.handle_message(mock_msg)
-
-            mock_method.assert_called_once()
-            self.bot.telegram_bot_client.send_photo.assert_called_once()
-
-    def test_segment(self):
-        mock_msg['caption'] = 'Segment'
-
-        with patch('polybot.img_proc.Img.segment') as mock_method:
-            self.bot.handle_message(mock_msg)
-
-            mock_method.assert_called_once()
-            self.bot.telegram_bot_client.send_photo.assert_called_once()
 
 
 if __name__ == '__main__':
