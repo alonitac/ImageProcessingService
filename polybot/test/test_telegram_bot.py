@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock, mock_open, MagicMock
 from polybot.bot import ImageProcessingBot
 import os
 
@@ -71,6 +71,33 @@ class TestBot(unittest.TestCase):
             mock_method.assert_called_once()
             self.bot.telegram_bot_client.send_photo.assert_called_once()
 
+    @patch('builtins.open', new_callable=mock_open)
+    def test_contour_with_exception(self, mock_open):
+        mock_open.side_effect = OSError("Read-only file system")
+        mock_msg['caption'] = 'Contour'
+        retry_keywords = [
+            "error", "failed", "issue", "problem", "try again", "retry", "wrong",
+            "unsuccessful", "unable", "trouble", "unable to", "please try",
+            "again later", "another attempt"
+        ]
+
+        self.bot.telegram_bot_client.send_message = MagicMock()
+
+        try:
+            self.bot.handle_message(mock_msg)
+        except Exception as err:
+            self.fail(err)
+
+        self.assertTrue(self.bot.telegram_bot_client.send_message.called)
+
+        call_args = self.bot.telegram_bot_client.send_message.call_args
+        chat_id = call_args[0][0]
+        text = call_args[0][1]
+
+        self.assertEqual(chat_id, mock_msg['chat']['id'])
+
+        contains_retry = any(keyword in text.lower() for keyword in retry_keywords)
+        self.assertTrue(contains_retry, f"Error message was not sent to the user. Make sure your message contains one of {retry_keywords}")
 
 
 if __name__ == '__main__':

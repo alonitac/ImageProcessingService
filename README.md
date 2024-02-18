@@ -283,6 +283,9 @@ A few notes:
 - Inside the `ImageProcessingBot` class, override `handle_message` method and implement the needed functionality.
 - Remember that by inheriting the `Bot` class, you can use all of its methods (such as `send_text`, `download_user_photo`, `send_photo`...). 
 - Possible `caption` values are: `['Blur', 'Contour', 'Rotate', 'Segment', 'Salt and pepper', 'Concat']`.
+- Handle potential errors using `try... except... `. Send an appropriate message to the user (E.g. "something went wrong... please try again").
+- Set a timeout when sending a message to Telegram.
+- Use `logger` to log important information in your app.
 
 **Note**: Your bot should support the `Blur` and `Contour` filters (those filters have already implemented for you). 
 
