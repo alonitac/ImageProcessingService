@@ -17,11 +17,11 @@ def index():
 @app.route(f'/{TELEGRAM_TOKEN}/', methods=['POST'])
 def webhook():
     req = request.get_json()
-    bot.handle_message(req['message'])
+    print(req['message'])
+    bot.handle_message(req['message'])  # in case of stuck need to comment this line
     return 'Ok'
 
 
 if __name__ == "__main__":
     bot = Bot(TELEGRAM_TOKEN, TELEGRAM_APP_URL)
-
     app.run(host='0.0.0.0', port=8443)

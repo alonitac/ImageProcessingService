@@ -3,7 +3,7 @@ from loguru import logger
 import os
 import time
 from telebot.types import InputFile
-from polybot.img_proc import Img
+from img_proc import Img
 
 
 class Bot:
@@ -62,8 +62,49 @@ class Bot:
 
     def handle_message(self, msg):
         """Bot Main message handler"""
-        logger.info(f'Incoming message: {msg}')
-        self.send_text(msg['chat']['id'], f'Your original message: {msg["text"]}')
+        # logger.info(f'Incoming message: {msg}')
+        if "text" in msg:
+            self.send_text(msg['chat']['id'], f'Your original message: {msg["text"]}')
+        else:
+            img_path = self.download_user_photo(msg)
+            # logger.info(f'img_path is {img_path}')
+            new_path = ""
+            if "caption" in msg:
+                if msg["caption"] == "blur":
+                    self.send_text(msg['chat']['id'], "Blur filter in progress")
+                    new_img = Img(img_path)
+                    new_img.blur()
+                    new_path = new_img.save_img()
+                    self.send_photo(msg["chat"]["id"], new_path)
+                    self.send_text(msg['chat']['id'], "Blur filter applied")
+                elif msg["caption"] == "contour":
+                    self.send_text(msg['chat']['id'], "Contour filter in progress")
+                    new_img = Img(img_path)
+                    new_img.contour()
+                    new_path = new_img.save_img()
+                    self.send_photo(msg["chat"]["id"], new_path)
+                    self.send_text(msg['chat']['id'], "Contour filter applied")
+                elif msg["caption"] == "salt and pepper":
+                    self.send_text(msg['chat']['id'], "salt and pepper filter in progress")
+                    new_img = Img(img_path)
+                    new_img.salt_n_pepper()
+                    new_path = new_img.save_img()
+                    self.send_photo(msg["chat"]["id"], new_path)
+                    self.send_text(msg['chat']['id'], "salt and pepper filter applied")
+                elif msg["caption"] == "mix":
+                    self.send_text(msg['chat']['id'], "mix filter in progress")
+                    new_img = Img(img_path)
+                    new_img.salt_n_pepper()
+                    new_path = new_img.save_img()
+
+                    sec_img = Img(new_path)
+                    sec_img.blur()
+                    new_path = sec_img.save_img()
+                    self.send_photo(msg["chat"]["id"], new_path)
+                    self.send_text(msg['chat']['id'], "mix filter applied")
+
+            os.remove(img_path)  # cleaning
+            os.remove(new_path)  # cleaning
 
 
 class QuoteBot(Bot):
